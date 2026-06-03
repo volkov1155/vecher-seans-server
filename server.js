@@ -1,10 +1,6 @@
 require('dotenv').config()
-const { execSync } = require('child_process')
-
-try {
-  execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' })
-} catch (e) {
-  console.error('prisma db push failed:', e.message)
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'file:/tmp/vecher-seans.db'
 }
 
 const express = require('express')
@@ -345,7 +341,13 @@ app.get('/api/movies/family', authMiddleware, async (req, res) => {
 // ─── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🎬 Вечерний сеанс backend запущен: http://localhost:${PORT}`)
+  console.log(`📂 DATABASE_URL: ${process.env.DATABASE_URL}`)
   if (!OMDB_KEY || OMDB_KEY === 'your_omdb_api_key_here') {
-    console.warn('⚠️  OMDB_API_KEY не задан! Получи ключ на https://www.omdbapi.com/apikey.aspx')
+    console.warn('⚠️  OMDB_API_KEY не задан!')
   }
+  const { exec } = require('child_process')
+  exec('npx prisma db push --accept-data-loss', (err, stdout, stderr) => {
+    if (err) console.error('db push error:', stderr)
+    else console.log('✅ DB ready')
+  })
 })
