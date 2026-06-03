@@ -10,14 +10,7 @@ const { PrismaClient } = require('@prisma/client')
 const app = express()
 const prisma = new PrismaClient()
 
-app.use(cors({
-  origin: [
-    'https://vecher-seans-client-production.up.railway.app',
-    'http://localhost:5173',
-    /\.railway\.app$/,
-  ],
-  credentials: true,
-}))
+app.use(cors({ origin: true, credentials: true }))
 app.use(express.json())
 
 app.get('/', (req, res) => res.json({ status: 'ok', app: 'Вечерний сеанс API' }))
