@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "node --watch server.js",
-    "start": "npx prisma generate && npx prisma db push --accept-data-loss && node server.js",
+    "build": "npx prisma generate",
+    "start": "npx prisma db push --accept-data-loss && node server.js",
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "setup": "npm install && npx prisma generate && npx prisma db push"

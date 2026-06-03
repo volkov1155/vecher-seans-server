@@ -8,8 +8,17 @@ const { PrismaClient } = require('@prisma/client')
 const app = express()
 const prisma = new PrismaClient()
 
-app.use(cors())
+app.use(cors({
+  origin: [
+    'https://vecher-seans-client-production.up.railway.app',
+    'http://localhost:5173',
+    /\.railway\.app$/,
+  ],
+  credentials: true,
+}))
 app.use(express.json())
+
+app.get('/', (req, res) => res.json({ status: 'ok', app: 'Вечерний сеанс API' }))
 
 const JWT_SECRET = process.env.JWT_SECRET || 'vecher-seans-secret'
 const OMDB_KEY = process.env.OMDB_API_KEY
@@ -326,7 +335,7 @@ app.get('/api/movies/family', authMiddleware, async (req, res) => {
 })
 
 // ─── Start ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🎬 Вечерний сеанс backend запущен: http://localhost:${PORT}`)
   if (!OMDB_KEY || OMDB_KEY === 'your_omdb_api_key_here') {
     console.warn('⚠️  OMDB_API_KEY не задан! Получи ключ на https://www.omdbapi.com/apikey.aspx')
