@@ -1,4 +1,12 @@
 require('dotenv').config()
+const { execSync } = require('child_process')
+
+try {
+  execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit' })
+} catch (e) {
+  console.error('prisma db push failed:', e.message)
+}
+
 const express = require('express')
 const cors = require('cors')
 const bcrypt = require('bcryptjs')
